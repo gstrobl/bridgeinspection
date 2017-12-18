@@ -1,0 +1,74 @@
+
+// Fonts
+@import url(https://fonts.googleapis.com/css?family=RRoboto:300,400,500,700|Material+Icons);
+
+
+// Variables
+@import "variables";
+
+// @import "node_modules/vuetify/dist/vuetify.min.css";
+
+// Bootstrap
+// @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+.card {
+  .form {
+    padding: 0px 12px;
+  }
+  .form-error {
+    margin-top: -20px;
+  }
+}
+
+.row-link {
+  cursor: pointer;
+}
+
+.dropbox {
+  outline: 2px dashed #2F3030; /* the dash box */
+  outline-offset: -10px;
+  background: rgba(255, 173, 0, 0.9);
+  color: #2F3030;
+  padding: 10px 10px;
+  min-height: 200px; /* minimum height */
+  position: relative;
+  cursor: pointer;
+}
+
+.input-file {
+  opacity: 0; /* invisible but it's there! */
+  width: 100%;
+  height: 200px;
+  position: absolute;
+  cursor: pointer;
+}
+
+.dropbox:hover {
+  background: rgba(255, 173, 0, 0.7); /* when mouse over to the drop zone, change color */
+}
+
+.dropbox p {
+  font-size: 1.2em;
+  text-align: center;
+  padding: 50px 0;
+}
+
+.img-marker {
+  max-width: 100%;
+}
+
+.card {
+  margin-bottom: 15px;
+}
+
+.fill-height {
+  .box-down {
+    padding-bottom: 14px;
+  }
+}
+
+.card__text {
+  .description {
+    padding-left: 12px;
+  }
+}
