@@ -7,6 +7,7 @@
       <v-flex xs12 align-end flexbox>
         <div v-if="!inspectionForms" class="box-down">
           <v-btn color="amber darken-2" dark @click.prevent="updateInspectionForms()">{{ $t("inspection.adddamagemarks") }}</v-btn>
+          <v-btn color="amber darken-2" dark @click.prevent="backToInspection()">{{ $t("inspection.backtoinspection") }}</v-btn>
         </div>
       </v-flex>
     </v-layout>
@@ -17,7 +18,7 @@
       >
       </v-text-field>
       <FormError v-if="errors.damage_description" :errors="errors">
-         {{ errors.route[0] }}
+         {{ errors.damage_description[0] }}
       </FormError>
       <v-text-field box
         :label= "this.$t('inspection.classification')"
@@ -25,7 +26,7 @@
       >
       </v-text-field>
       <FormError v-if="errors.classification" :errors="errors">
-         {{ errors.point[0] }}
+         {{ errors.classification[0] }}
       </FormError>
       <v-btn v-if="!currentId"color="green lighten-1" dark @click.prevent="addMarker()">{{ $t("general.add") }}</v-btn>
       <v-btn v-if="currentId" color="green lighten-1" dark @click.prevent="updateMarker(currentId)">{{ $t("general.update") }}</v-btn>
@@ -99,7 +100,7 @@ export default {
       inspectionMarkers: []
     }
   },
-  props: ['fileId', 'inspectionId'],
+  props: [ 'inspectionId', 'fileId', 'id'],
   components: {
     FormError
  },
@@ -117,6 +118,9 @@ export default {
         }).catch(e => { console.log(e) })
   },
   methods: {
+    backToInspection () {
+      this.$router.push({ name: 'inspection.edit', params: { inspectionId: this.$store.getters.isInspectionId, id: this.id }})
+    },
     updateInspectionForms (){
       this.inspectionForms ? this.inspectionForms = false : this.inspectionForms = true
     },
@@ -155,8 +159,15 @@ export default {
           currentId = ''
           this.inspectionForms = false
            // this.$router.push({ name: 'bridges.show' })
+         } else {
+           this.errors = response.data
+           this.$popup({
+               message         : this.$t('general.error'),
+               color           : '#fff',
+               backgroundColor : 'rgba(139,0,0, 0.7)',
+               delay           : 8
+           })
          }
-         this.errors = response.data
        })
        .catch(e => {
          console.log(e)
@@ -188,8 +199,15 @@ export default {
 
           this.inspectionForms = false
            // this.$router.push({ name: 'bridges.show' })
+         } else {
+           this.errors = response.data
+           this.$popup({
+               message         : this.$t('general.error'),
+               color           : '#fff',
+               backgroundColor : 'rgba(139,0,0, 0.7)',
+               delay           : 8
+           })
          }
-         this.errors = response.data
        })
        .catch(e => {
          console.log(e)

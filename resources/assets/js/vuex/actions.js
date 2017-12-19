@@ -10,6 +10,10 @@ export function setInspectionsImages ({commit}, status) {
 export function setInspectionId ({commit}, id) {
   commit('SET_INSPECTION_ID', id)
 }
+
+export function setEditInspectionId ({commit}, id) {
+  commit('SET_EDIT_INSPECTION_ID', id)
+}
 //
 // export function loginWithEmail ({commit}, {email, password}) {
 //   return firebaseAuth().signInWithEmailAndPassword(email, password)

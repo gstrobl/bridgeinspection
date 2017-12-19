@@ -22,6 +22,14 @@
              <div slot="header">{{$t("inspection.inspectiondate")}}: {{inspection.inspectiondate}}</div>
              <v-card>
                <v-card-text class="grey darken-3">
+                 <p v-if="inspection.description">
+                   {{inspection.description}}
+                 </p>
+                 <ul class="data" v-for="(marker, index) in markers">
+                   <li v-if="marker.inspection_id == inspection._id">
+                     {{ marker.damage_description }}
+                   </li>
+                 </ul>
                  <v-btn color="amber darken-2" dark @click.prevent="editInspection(inspection._id)">{{ $t("inspection.edit") }}</v-btn>
                  <v-btn color="red darken-1"  dark @click.prevent="dialogdeleteInspection(inspection._id)">{{ $t("inspection.delete") }}</v-btn>
                  <v-btn color="green lighten-1" dark @click.prevent="exportInspection">{{ $t("general.export") }}</v-btn>
@@ -58,6 +66,14 @@
               <v-btn color="red darken-1" dark @click.prevent="deleteInspection()">{{ $t("general.delete") }}</v-btn>
             </div>
         </Modal>
+        <Modal v-bind:dialog="dialogBridge">
+            <div slot="headline" class="headline">{{ $t("bridge.routeinspection_delete") }}</div>
+            <v-card-text slot="text">{{ $t("bridge.inspection_text_delete") }}</v-card-text>
+            <div slot="button">
+              <v-btn class="red--text darken-1" flat="flat" @click.prevent="closeModal()">{{ $t("general.cancel") }}</v-btn>
+              <v-btn color="red darken-1" dark @click.prevent="deleteBridge()">{{ $t("general.delete") }}</v-btn>
+            </div>
+        </Modal>
     </v-layout>
   </template>
 <script>
@@ -76,7 +92,9 @@ export default {
       submitted: false,
       errors: [],
       dialog: false,
-      currentInspectionId: ''
+      dialogBridge: false,
+      currentInspectionId: '',
+      markers: [],
     }
   },
   props: ['id'],
@@ -93,11 +111,36 @@ export default {
 
     axios.get('/api/bridge/' + this.id + '/allInspections' )
       .then(response => {
-        this.inspections = response.data
-        console.log(this.inspections)
+        this.inspections = response.data.inspectionItems
+        this.markers = response.data.inspectionMarkers
+        console.log(this.markers)
       }).catch(e => { console.log(e) })
  },
  methods: {
+   dialogdeleteBridge (){
+     this.dialogBridge = true;
+   },
+   deleteBridge (){
+     axios.post('/api/bridge/' + this.id + '/delete')
+      .then(response => {
+        if(response.data.success){
+          this.$popup({
+              message         : this.$t('inspection.deletedimage'),
+              color           : '#fff',
+              backgroundColor : 'rgba(0, 0, 0, 0.7)',
+              delay           : 5
+          })
+
+          this.$router.push({ name: 'bridges.show', params: {}})
+          this.dialogBridge = false;
+        }
+
+        this.errors = response.data
+      })
+      .catch(e => {
+        console.log(e)
+      })
+   },
    dialogdeleteInspection (inspectionId){
      this.dialog = true;
      this.currentInspectionId = inspectionId;
@@ -112,9 +155,14 @@ export default {
               backgroundColor : 'rgba(0, 0, 0, 0.7)',
               delay           : 5
           })
+
+          this.inspections = []
+          // this.$router.push({ name: 'bridge.show', params: { id: this.id }})
+
           axios.get('/api/bridge/' + this.id + '/allInspections' )
             .then(response => {
-              this.inspections = response.data
+              this.inspections = response.data.inspectionItems
+              this.markers = response.data.inspectionMarkers
               console.log(this.inspections)
             }).catch(e => { console.log(e) })
 
@@ -129,6 +177,7 @@ export default {
    },
    closeModal(){
      this.dialog = false;
+     this.dialogBridge = false;
      this.currentInspectionId = '';
    },
    updateBridge () {
@@ -140,6 +189,9 @@ export default {
    editInspection (inspectionId) {
      console.log(inspectionId)
      this.$router.push({ name: 'inspection.edit', params: { id: this.id, inspectionId: inspectionId }})
+   },
+   backToOverview () {
+     this.$router.push({ name: 'inspection.edit', params: { inspectionId: this.$store.getters.isInspectionId, id: this.id }})
    },
    createInspection () {
      $('#modal').modal("hide")

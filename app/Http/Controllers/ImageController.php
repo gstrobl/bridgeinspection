@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Image;
 use App\Inspection;
+use App\ImageMarker;
 
 class ImageController extends Controller
 {
@@ -33,8 +34,8 @@ class ImageController extends Controller
     if (empty($request['inspectionId'])) {
       $inspection = Inspection::create([
         'bridge_id' => ($request['bridgeId']) ? $request['bridgeId'] : '',
-        'inspectiondate' => ($request['inspectiondate']) ? $request['inspectiondate'] : date("Y-m-d"),
-        'achievedate' => ($request['achievedate']) ? $request['achievedate'] : date("Y-m-d"),
+        'inspectiondate' => date("Y-m-d"),
+        // 'achievedate' => date("Y-m-d"),
       ]);
     }
     foreach ($request->uploadedFiles as $image) {
@@ -75,57 +76,6 @@ class ImageController extends Controller
   {
     $imageItem = Image::where('inspection_id', '=', $inspectionId)->where('_id', '=', $imageId)->first();
     return response()->json($imageItem, 200);
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function edit($id)
-  {
-
-    // $categoriesSelect = array();
-    // $categories = DB::table('categories')
-    //             ->orderBy('name', 'id')
-    //             ->get();
-    //
-    // $portfolio_item = Portfolio::find($id);
-    // $catSelect = DB::table('category_portfolio')
-    //             ->where('category_portfolio.portfolio_id', '=', $id)
-    //             ->join('categories', 'categories.id', '=', 'category_portfolio.category_id')
-    //             ->select('categories.id')
-    //             ->get();
-    //
-    // foreach ($catSelect as $cat) {
-    //   $categoriesSelect[] = $cat->id;
-    // }
-    //
-    // return view('dashboard.pages.portfolio.edititem',compact('portfolio_item', 'categories', 'categoriesSelect'));
-  }
-
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  int  $id
-   * @return Response
-   */
-  public function update($id, Request $request)
-  {
-    $validator = $this->validator($request->all());
-
-    if ($validator->fails()) {
-      return response()->json($validator->messages(), 200);
-    }
-
-    $bridgeItem = Bridge::find($id);
-    $bridgeItem->route = $request['route'];
-    $bridgeItem->point = $request['point'];
-    $bridgeItem->component = $request['component'];
-    $bridgeItem->save();
-
-    return response()->json(['success' => 'success', 'id' => $bridgeItem->id], 200);
   }
 
   /**

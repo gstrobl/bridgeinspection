@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Validator;
 use App\Inspection;
 use App\Image;
+use App\ImageMarker;
 
 class InspectionController extends Controller
 {
@@ -13,7 +14,7 @@ class InspectionController extends Controller
   {
     return Validator::make($data, [
         'inspectiondate' => 'required',
-        'achievedate' => 'required'
+        // 'achievedate' => 'required'
     ]);
   }
 
@@ -79,7 +80,9 @@ class InspectionController extends Controller
   public function showAllforBridge($id)
   {
     $inspectionItems = Inspection::where('bridge_id', '=', $id)->orderBy('inspectiondate', 'desc')->get();
-    return response()->json($inspectionItems, 200);
+    $inspectionMarkers = ImageMarker::where('bridge_id', '=', $id)->orderBy('created_at', 'desc')->get();
+    return response()->json(['inspectionItems' => $inspectionItems, 'inspectionMarkers' => $inspectionMarkers], 200);
+    // return response()->json($inspectionItems, 200);
   }
 
   /**
@@ -124,6 +127,10 @@ class InspectionController extends Controller
       $image_path = public_path('uploads/inspectionimages/').$image->filename;
       unlink($image_path);
       $image->delete();
+    }
+    $imageMarkers = ImageMarker::where('inspection_id', '=', $id)->get();
+    foreach ($imageMarkers as $marker) {
+      $marker->delete();
     }
     $inspectionItem = Inspection::where('_id', '=', $id)->first();
     $inspectionItem->delete();

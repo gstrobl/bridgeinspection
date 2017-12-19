@@ -23,7 +23,7 @@ class ImageMarkerController extends Controller
    *
    * @return Response
    */
-  public function store($imageId, $inspectionId, Request $request)
+  public function store($inspectionId, $imageId, Request $request)
   {
     $validator = $this->validator($request->all());
 
@@ -31,9 +31,11 @@ class ImageMarkerController extends Controller
       return response()->json($validator->messages(), 200);
     }
 
+    $inspection = Inspection::find($inspectionId);
     $imageMarkerItem = ImageMarker::create([
       'inspection_id' => $inspectionId,
       'image_id' => $imageId,
+      'bridge_id' => $inspection->bridge_id,
       'damage_description' => $request['damage_description'],
       'classification' => $request['classification']
     ]);
@@ -48,7 +50,7 @@ class ImageMarkerController extends Controller
    * @param  int  $id
    * @return Response
    */
-  public function showMarkers($imageId, $inspectionId)
+  public function showMarkers($inspectionId, $imageId)
   {
     $imageMarkerItems = ImageMarker::where('inspection_id', '=', $inspectionId)->where('image_id', '=', $imageId)->orderBy('created_at', 'desc')->get();
     return response()->json($imageMarkerItems, 200);
@@ -72,7 +74,7 @@ class ImageMarkerController extends Controller
    * @param  int  $id
    * @return Response
    */
-  public function update($imageId, $inspectionId, $markerId, Request $request)
+  public function update( $inspectionId, $imageId, $markerId, Request $request)
   {
     $validator = $this->validator($request->all());
 
@@ -80,7 +82,7 @@ class ImageMarkerController extends Controller
       return response()->json($validator->messages(), 200);
     }
 
-    $imageMarkerItem = ImageMarker::find($markerId);
+    $imageMarkerItem = ImageMarker::where('inspection_id', '=', $inspectionId)->where('image_id', '=', $imageId)->where('_id', '=', $markerId)->first();
     $imageMarkerItem->damage_description = $request['damage_description'];
     $imageMarkerItem->classification = $request['classification'];
     $imageMarkerItem->save();

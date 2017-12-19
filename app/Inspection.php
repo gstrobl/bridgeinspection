@@ -25,4 +25,9 @@ class Inspection extends Moloquent
   {
     return $this->hasMany('App\Image');
   }
+
+  public function imageMarkers()
+  {
+    return $this->hasMany('App\ImageMarker');
+  }
 }

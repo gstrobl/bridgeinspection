@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 use App\Bridge;
+use App\Inspection;
+use App\ImageMarker;
+use App\Image;
 
 class BridgeController extends Controller
 {
@@ -107,6 +110,22 @@ class BridgeController extends Controller
    */
   public function destroy($id)
   {
-      //
+    $imageItems = Image::where('bridge_id', '=', $id)->get();
+    foreach ($imageItems as $image) {
+      $image_path = public_path('uploads/inspectionimages/').$image->filename;
+      unlink($image_path);
+      $image->delete();
+    }
+    $imageMarkers = ImageMarker::where('bridge_id', '=', $id)->get();
+    foreach ($imageMarkers as $marker) {
+      $marker->delete();
+    }
+    $inspectionItems = Inspection::where('bridge_id', '=', $id)->get();
+    foreach ($inspectionItems as $inspectionItem) {
+      $inspectionItem->delete();
+    }
+    $inspectionItem = Bridge::where('_id', '=', $id)->first();
+    $inspectionItem->delete();
+    return response()->json(['success' => 'success']);
   }
 }

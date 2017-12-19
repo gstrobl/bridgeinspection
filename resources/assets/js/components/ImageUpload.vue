@@ -81,15 +81,8 @@
         this.uploadedFiles = [];
         this.uploadError = null;
       },
-      loadImages: function () {
-        axios.get('/api/inspection/' + this.$store.getters.isInspectionId + '/getImageItems')
-          .then(response => {
-            this.uploadedFiles = response.data
-            console.log(response.data)
-          }).catch(e => { console.log(e) })
-      },
       setMarker(fileId) {
-        this.$router.push({ name: 'inspection.addmarker', params: { inspectionId: this.$store.getters.isInspectionId, fileId: fileId }})
+        this.$router.push({ name: 'inspection.addmarker', params: { inspectionId: this.$store.getters.isInspectionId, fileId: fileId, id: this.bridgeId }})
       },
       deleteImage(fileId) {
         axios.post('/api/inspection/' + fileId + '/deleteImage')
@@ -169,9 +162,9 @@
       this.$store.dispatch('setInspectionsImages', false)
       this.reset();
 
-      if(this.inspectionId){
-        this.$store.dispatch('setInspectionId', this.inspectionId)
-        axios.get('/api/inspection/' + this.inspectionId + '/getImageItems')
+      if(this.$store.getters.isEditInspectionId){
+        this.$store.dispatch('setInspectionId', this.$store.getters.isEditInspectionId)
+        axios.get('/api/inspection/' + this.$store.getters.isEditInspectionId + '/getImageItems')
           .then(response => {
             this.uploadedFiles = response.data
             if(this.uploadedFiles.length < 1){

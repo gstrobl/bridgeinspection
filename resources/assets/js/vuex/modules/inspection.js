@@ -1,6 +1,7 @@
 const state = {
   isUploading: false,
-  inspectionId: ''
+  inspectionId: '',
+  editInspectionId: ''
 }
 
 const mutations = {
@@ -9,6 +10,9 @@ const mutations = {
   },
   'SET_INSPECTION_ID' (state, id) {
     state.inspectionId = id
+  },
+  'SET_EDIT_INSPECTION_ID' (state, id) {
+    state.editInspectionId = id
   }
 }
 
@@ -21,6 +25,9 @@ const getters = {
   },
   isInspectionId: (state) => {
     return state.inspectionId
+  },
+  isEditInspectionId: (state) => {
+    return state.editInspectionId
   }
 }
 

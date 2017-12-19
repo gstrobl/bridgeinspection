@@ -29,6 +29,7 @@ Route::prefix('api')->group(function () {
   Route::post('/bridge/add', 'BridgeController@store');
   Route::get('/bridge/all', 'BridgeController@showAll');
   Route::get('/bridge/{id}', 'BridgeController@show');
+  Route::post('/bridge/{id}/delete', 'BridgeController@destroy');
   Route::get('/bridge/{id}/allInspections', 'InspectionController@showAllforBridge');
   Route::post('/bridge/{id}/edit', 'BridgeController@update');
   Route::post('/inspection/photos/upload', 'ImageController@store');

@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-//Define route components
-const home = { template: '<div>homes1</div>' }
 // const foo = { template: '<div>Foo</div>' }
 // const bar = { template: '<div>Bar</div>' }
 const bridgeAdd = require('../components/pages/bridge/Add.vue')
@@ -22,14 +20,14 @@ export default new VueRouter({
     mode: 'history',
     base: __dirname,
       routes: [
-        { path: '/', name: 'home', component: home },
+        { path: '/', name: 'home', component: bridgeOverview },
         { path: '/auth', name: 'authentication', component: auth },
         { path: '/bridges', name: 'bridges.show', component: bridgeOverview },
         { path: '/bridge/add', name:'bridge.add', component: bridgeAdd },
         { path: '/bridge/:id', name: 'bridge.show', props: true, component: bridgeShow },
         { path: '/bridge/:id/edit', name: 'bridge.edit', props: true, component: bridgeEdit },
         { path: '/bridge/:id/addinspection', name: 'bridge.addinspection', props: true, component: inspectionAdd },
-        { path: '/inspection/:inspectionId/:fileId/addmarker', name: 'inspection.addmarker', props: true, component: imageMarker },
+        { path: '/bridge/:id/inspection/:inspectionId/:fileId/addmarker', name: 'inspection.addmarker', props: true, component: imageMarker },
         { path: '/bridge/:id/inspection/:inspectionId/edit', name: 'inspection.edit', props: true, component: inspectionEdit },
         // {
         // 	path: '/bridge',

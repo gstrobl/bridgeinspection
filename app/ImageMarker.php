@@ -18,6 +18,6 @@ class ImageMarker extends Moloquent
    * @var array
    */
   protected $fillable = [
-      'inspection_id', 'image_id', 'damage_description', 'classification'
+      'inspection_id', 'bridge_id', 'image_id', 'damage_description', 'classification'
   ];
 }

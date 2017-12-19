@@ -17,6 +17,7 @@
                <div v-if="!isImageUploading" class="box">
                  <v-btn v-if="!this.inspectionId" color="amber darken-2" dark @click.prevent="createInspection()">{{ $t("general.save") }}</v-btn>
                  <v-btn v-if="this.inspectionId" color="green lighten-1" dark @click.prevent="updateInspection()">{{ $t("general.update") }}</v-btn>
+                 <v-btn color="amber darken-2" dark @click.prevent="backToOverview()">{{ $t("general.backtooverview") }}</v-btn>
                </div>
              </v-flex>
            </v-layout>
@@ -153,7 +154,12 @@ export default {
    FormError,
    Modal
 },
+mounted (){
+
+},
 created () {
+  this.$store.dispatch('setEditInspectionId', this.inspectionId);
+
   axios.get('/api/bridge/' + this.id)
     .then(response => {
       this.newBridge = response.data
@@ -171,12 +177,11 @@ computed: {
     console.log(this.$store.getters.isImageUploading)
     return this.$store.getters.isImageUploading
   }
-  // isInspectionId () {
-  //   this.inspectionId = this.$store.getters.isInspectionId
-  //   return this.$store.getters.isInspectionId
-  // }
 },
 methods: {
+  backToOverview () {
+    this.$router.push({ name: 'bridge.show', params: { id: this.id }})
+  },
   updateInspection () {
     axios.post('/api/inspection/' + this.inspectionId + '/edit', this.newInspection)
      .then(response => {

@@ -17,6 +17,7 @@
                 <div v-if="!isImageUploading" class="box">
                   <v-btn v-if="!isInspectionId" color="amber darken-2" dark @click.prevent="createInspection()">{{ $t("general.save") }}</v-btn>
                   <v-btn v-if="isInspectionId" color="green lighten-1" dark @click.prevent="updateInspection()">{{ $t("general.update") }}</v-btn>
+                  <v-btn color="amber darken-2" dark @click.prevent="backToOverview()">{{ $t("general.backtooverview") }}</v-btn>
                 </div>
               </v-flex>
             </v-layout>
@@ -59,6 +60,9 @@
                           </template>
                         </v-date-picker>
                       </v-dialog>
+                      <FormError v-if="errors.inspectiondate" :errors="errors">
+                         {{ errors.inspectiondate[0] }}
+                      </FormError>
                     </v-flex>
                     <v-flex xs12>
                       <v-dialog
@@ -84,6 +88,9 @@
                         </v-date-picker>
                       </v-dialog>
                     </v-flex>
+                    <FormError v-if="errors.achievedate" :errors="errors">
+                       {{ errors.achievedate[0] }}
+                    </FormError>
                   </v-layout>
                 </div>
              </v-stepper-content>
@@ -165,7 +172,11 @@ export default {
     FormError,
     Modal
  },
+ mounted (){
+
+ },
  created () {
+   this.$store.dispatch('setEditInspectionId', '');
    axios.get('/api/bridge/' + this.id)
      .then(response => {
        this.newBridge = response.data
@@ -183,9 +194,13 @@ export default {
    }
  },
  methods: {
+   backToOverview () {
+     this.$router.push({ name: 'bridge.show', params: { id: this.id }})
+   },
    updateInspection () {
      axios.post('/api/inspection/' + this.isInspectionId + '/edit', this.newInspection)
       .then(response => {
+        console.log(this.newInspection)
         if(response.data.success){
           this.$popup({
               message         : this.$t('general.updated'),
@@ -193,9 +208,18 @@ export default {
               backgroundColor : 'rgba(0, 0, 0, 0.7)',
               delay           : 5
           })
+          this.errors = ''
           // this.$router.push({ name: 'bridges.show' })
+        } else {
+          this.errors = response.data
+          this.$popup({
+              message         : this.$t('general.error'),
+              color           : '#fff',
+              backgroundColor : 'rgba(139,0,0, 0.7)',
+              delay           : 8
+          })
         }
-        this.errors = response.data
+
       })
       .catch(e => {
         console.log(e)
@@ -212,9 +236,16 @@ export default {
               delay           : 5
           })
           this.$store.dispatch('setInspectionId', response.data.inspectionId)
-          // this.$router.push({ name: 'bridges.show' })
+          this.errors = ''
+        } else {
+          this.errors = response.data
+          this.$popup({
+              message         : this.$t('general.error'),
+              color           : '#fff',
+              backgroundColor : 'rgba(139,0,0, 0.7)',
+              delay           : 8
+          })
         }
-        this.errors = response.data
       })
       .catch(e => {
         console.log(e)

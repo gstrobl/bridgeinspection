@@ -8,6 +8,10 @@ export default new VueI18n({
   messages: {
     en: {
       general: {
+        inspectionoverview: 'Inspektionsübersicht',
+        backtobrigdes: 'Brückenübersicht',
+        backtooverview: 'Zurück zur Übersicht',
+        error: 'Fehler',
         login: 'Login',
         email: '',
         password: '',
@@ -29,6 +33,7 @@ export default new VueI18n({
         close: 'Close'
       },
       inspection : {
+        backtoinspection: 'Zurück zur Inspektion',
         marker_edit: '',
         marker_delete: '',
         classification: 'Klassifizierung',
@@ -73,6 +78,10 @@ export default new VueI18n({
     },
     de: {
       general: {
+        inspectionoverview: 'Inspektionsübersicht',
+        backtobrigdes: 'Brückenübersicht',
+        backtooverview: 'Zurück zur Übersicht',
+        error: 'Fehler',
         login: 'Login',
         email: 'E-Mail Adresse',
         password: 'Passwort',
@@ -94,6 +103,7 @@ export default new VueI18n({
         close: 'Schließen'
       },
       inspection : {
+        backtoinspection: 'Zurück zur Inspektion',
         marker_edit: 'Markierung bearbeiten',
         marker_delete: 'Markierung löschen',
         marker_deleted: 'Markierung gelöscht',

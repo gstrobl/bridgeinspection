@@ -38,6 +38,8 @@
               </FormError>
             </div>
             <v-btn primary dark @click.prevent="updateBridge">{{ $t("general.update") }}</v-btn>
+            <v-btn color="amber darken-2" dark @click.prevent="backToOverview()">{{ $t("general.inspectionoverview") }}</v-btn>
+            <v-btn color="amber darken-2" dark @click.prevent="backToBridges()">{{ $t("general.backtobrigdes") }}</v-btn>
             <vue-up></vue-up>
           </v-card>
         </v-flex>
@@ -81,6 +83,12 @@ export default {
      }).catch(e => { console.log(e) })
  },
  methods: {
+   backToOverview () {
+     this.$router.push({ name: 'bridge.show', params: { id: this.id }})
+   },
+   backToBridges () {
+     this.$router.push({ name: 'bridges.show', params: {}})
+   },
    updateBridge () {
      axios.post('/api/bridge/' + this.id + '/edit', this.newBridge)
       .then(response => {
